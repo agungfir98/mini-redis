@@ -1,0 +1,19 @@
+# Binaries for programs and plugins
+*.exe
+
+# test binary, built with `go test -c`
+*.test
+
+# Output of `go build`
+**/*.exe
+**/*.test
+**/*.prof
+
+# IDE and editor specific files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*.log
