@@ -6,3 +6,6 @@ fmt:
 
 test:
 	go test -v ./...
+
+rtest:
+	go test -race ./...
