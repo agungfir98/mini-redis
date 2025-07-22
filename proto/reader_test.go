@@ -7,9 +7,9 @@ import (
 )
 
 func TestAll(t *testing.T) {
-	t.Run("testing readLine", testReadLine)
-	t.Run("testing readArray", testReadArray)
-	t.Run("testing readString", testString)
+	t.Run("testing read line", testReadLine)
+	t.Run("testing read array", testReadArray)
+	t.Run("testing read string", testString)
 
 	t.Run("testing Read", func(t *testing.T) {
 		if t.Failed() {
@@ -136,6 +136,14 @@ func testRead(t *testing.T) {
 				{Typ: "string", String: "set"},
 				{Typ: "string", String: "foo"},
 				{Typ: "string", String: "bar"},
+			}},
+		},
+		{
+			name:    "get foo",
+			payload: "*2\r\n$3\r\nget\r\n$3\r\nfoo\r\n",
+			want: RespMessage{Typ: "array", Array: []RespMessage{
+				{Typ: "string", String: "get"},
+				{Typ: "string", String: "foo"},
 			}},
 		},
 	}
