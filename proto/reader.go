@@ -23,15 +23,6 @@ type Resp struct {
 	reader *bufio.Reader
 }
 
-type RespMessage struct {
-	Typ    string
-	Status string
-	Error  string
-	Num    int
-	String string
-	Array  []RespMessage
-}
-
 func NewResp(rd io.Reader) *Resp {
 	r := &Resp{reader: bufio.NewReader(rd)}
 
