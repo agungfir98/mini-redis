@@ -53,12 +53,12 @@ func testReadArray(t *testing.T) {
 		name      string
 		payload   string
 		typWant   string
-		arrayWant Value
+		arrayWant RespMessage
 		wantErr   bool
 	}
 
 	tc := []testCase{
-		{name: "case 1", payload: "*2\r\n", typWant: "array", arrayWant: Value{Typ: "array", Array: make([]Value, 2)}},
+		{name: "case 1", payload: "*2\r\n", typWant: "array", arrayWant: RespMessage{Typ: "array", Array: make([]RespMessage, 2)}},
 	}
 
 	for _, c := range tc {
@@ -125,14 +125,14 @@ func testRead(t *testing.T) {
 	type testCase struct {
 		name    string
 		payload string
-		want    Value
+		want    RespMessage
 		wantErr bool
 	}
 	tc := []testCase{
 		{
 			name:    "set foo bar",
 			payload: "*3\r\n$3\r\nset\r\n$3\r\nfoo\r\n$3\r\nbar\r\n",
-			want: Value{Typ: "array", Array: []Value{
+			want: RespMessage{Typ: "array", Array: []RespMessage{
 				{Typ: "string", String: "set"},
 				{Typ: "string", String: "foo"},
 				{Typ: "string", String: "bar"},

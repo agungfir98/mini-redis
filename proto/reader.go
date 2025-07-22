@@ -23,13 +23,13 @@ type Resp struct {
 	reader *bufio.Reader
 }
 
-type Value struct {
+type RespMessage struct {
 	Typ    string
 	Status string
 	Error  string
 	Num    int
 	String string
-	Array  []Value
+	Array  []RespMessage
 }
 
 func NewResp(rd io.Reader) *Resp {
@@ -38,10 +38,10 @@ func NewResp(rd io.Reader) *Resp {
 	return r
 }
 
-func (r *Resp) Read() (Value, error) {
+func (r *Resp) Read() (RespMessage, error) {
 	_type, err := r.reader.ReadByte()
 	if err != nil {
-		return Value{}, err
+		return RespMessage{}, err
 	}
 
 	switch _type {
@@ -50,7 +50,7 @@ func (r *Resp) Read() (Value, error) {
 	case RespString:
 		return r.readString()
 	default:
-		return Value{}, nil
+		return RespMessage{}, nil
 	}
 
 }
@@ -77,16 +77,16 @@ func (r *Resp) readLine() (line []byte, n int, err error) {
 	return line, n, nil
 }
 
-func (r *Resp) readArray() (Value, error) {
-	v := Value{}
+func (r *Resp) readArray() (RespMessage, error) {
+	v := RespMessage{}
 	v.Typ = "array"
 
 	length, _, err := r.readInteger()
 	if err != nil {
-		return Value{}, err
+		return RespMessage{}, err
 	}
 
-	v.Array = make([]Value, length)
+	v.Array = make([]RespMessage, length)
 
 	for i := range length {
 		val, err := r.Read()
@@ -102,13 +102,13 @@ func (r *Resp) readArray() (Value, error) {
 	return v, nil
 }
 
-func (r *Resp) readString() (Value, error) {
-	v := Value{}
+func (r *Resp) readString() (RespMessage, error) {
+	v := RespMessage{}
 	v.Typ = "string"
 
 	length, _, err := r.readInteger()
 	if err != nil {
-		return Value{}, err
+		return RespMessage{}, err
 	}
 
 	// NOTE:
