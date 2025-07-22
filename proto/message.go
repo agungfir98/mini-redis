@@ -1,5 +1,9 @@
 package proto
 
+import (
+	"strconv"
+)
+
 type RespMessage struct {
 	Typ    string
 	Status string
@@ -13,6 +17,8 @@ func (v *RespMessage) Marshal() []byte {
 	switch v.Typ {
 	case "status":
 		return v.marshalStatus()
+	case "string":
+		return v.marshalString()
 	case "integer":
 		return v.marshalInteger()
 	case "null":
@@ -66,6 +72,19 @@ func (v *RespMessage) marshalError() []byte {
 
 	b = append(b, RespError)
 	b = append(b, []byte(v.Error)...)
+	b = append(b, cr, lf)
+
+	return b
+}
+
+// format: $<len>\r\n<string>\r\n
+func (v *RespMessage) marshalString() []byte {
+	var b []byte
+
+	b = append(b, RespString)
+	b = append(b, []byte(strconv.Itoa(len(v.String)))...)
+	b = append(b, cr, lf)
+	b = append(b, []byte(v.String)...)
 	b = append(b, cr, lf)
 
 	return b
