@@ -14,6 +14,7 @@ var Message = map[string]func([]proto.RespMessage) proto.RespMessage{
 	"DEL":  Del,
 	"HSET": Hset,
 	"HGET": Hget,
+	"HDEL": Hdel,
 }
 
 var SETs = map[string]string{}

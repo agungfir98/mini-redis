@@ -76,10 +76,11 @@ func testHashData(t *testing.T) {
 				{Typ: "string", String: "user"},
 				{Typ: "string", String: "u1"},
 				{Typ: "string", String: "u2"},
+				{Typ: "string", String: "u8"},
 			},
 			setWant: proto.RespMessage{Typ: "integer", Num: 2},
 			getWant: proto.RespMessage{Typ: "string", String: "foo"},
-			delWant: proto.RespMessage{Typ: "integer", Num: 1},
+			delWant: proto.RespMessage{Typ: "integer", Num: 2},
 		},
 	}
 
@@ -88,6 +89,7 @@ func testHashData(t *testing.T) {
 			var skip bool
 			runStep(t, "hset", &skip, func(t *testing.T) { testHset(t, c) })
 			runStep(t, "hget", &skip, func(t *testing.T) { testHget(t, c) })
+			runStep(t, "hdel", &skip, func(t *testing.T) { testHDel(t, c) })
 		})
 	}
 }
