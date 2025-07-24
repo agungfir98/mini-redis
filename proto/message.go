@@ -21,6 +21,8 @@ func (v *RespMessage) Marshal() []byte {
 		return v.marshalString()
 	case "integer":
 		return v.marshalInteger()
+	case "array":
+		return v.marshalArray()
 	case "null":
 		return v.marshalBulkNull()
 	case "nil":
@@ -86,6 +88,20 @@ func (v *RespMessage) marshalString() []byte {
 	b = append(b, cr, lf)
 	b = append(b, []byte(v.String)...)
 	b = append(b, cr, lf)
+
+	return b
+}
+
+func (v *RespMessage) marshalArray() []byte {
+	var b []byte
+
+	b = append(b, RespArray)
+	b = append(b, []byte(strconv.Itoa(len(v.Array)))...)
+	b = append(b, cr, lf)
+	for _, item := range v.Array {
+		buf := item.Marshal()
+		b = append(b, buf...)
+	}
 
 	return b
 }
