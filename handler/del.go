@@ -3,6 +3,9 @@ package handler
 import "github.com/agungfir98/mini-redis/proto"
 
 func Del(args []proto.RespMessage) proto.RespMessage {
+	if len(args) == 0 {
+		return WrongArgNumber("del")
+	}
 	var n int
 
 	SetMu.Lock()
