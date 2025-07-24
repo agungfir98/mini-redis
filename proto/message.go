@@ -50,7 +50,7 @@ func (v *RespMessage) marshalInteger() []byte {
 	// it supposed to return with format bellow, [ haven't figure a good way to indicate (+|-) ] maybe made a separate handler.
 	// :[<+|->]<value>\r\n
 	b = append(b, RespInt)
-	b = append(b, byte(v.Num))
+	b = append(b, []byte(strconv.Itoa(v.Num))...)
 	b = append(b, cr, lf)
 
 	return b
