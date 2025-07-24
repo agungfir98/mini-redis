@@ -6,21 +6,15 @@ import (
 	"testing"
 )
 
-func testSet(t *testing.T, tc []SetTestCase) {
-	for _, c := range tc {
-		t.Run("set", func(t *testing.T) {
-			cmd := c.args[0].String
+func testSet(t *testing.T, c SetTestCase) {
+	cmd := strings.ToUpper(c.setArgs[0].String)
+	handler, ok := Message[cmd]
+	if !ok {
+		t.Fatalf("no such command %v, test: %v\n", cmd, c.name)
+	}
 
-			handler, ok := Message[strings.ToUpper(cmd)]
-			if !ok {
-				t.Fatalf("no such command %v, test: %v\n", cmd, c.name)
-			}
-
-			result := handler(c.args[1:])
-			if !reflect.DeepEqual(result, c.want) {
-				t.Fatalf("expected: %v, got: %v\n", c.want, result)
-			}
-
-		})
+	got := handler(c.setArgs[1:])
+	if !reflect.DeepEqual(got, c.setWant) {
+		t.Fatalf("expected: %v, got: %v\n", c.setWant, got)
 	}
 }
