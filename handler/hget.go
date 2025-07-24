@@ -13,13 +13,13 @@ func Hget(args []proto.RespMessage) proto.RespMessage {
 	HsetMu.RLock()
 	if _, ok := HSETs[hash]; !ok {
 		HsetMu.RUnlock()
-		return proto.RespMessage{Typ: "nil"}
+		return proto.RespMessage{Typ: "null"}
 	}
 	val, ok := HSETs[hash][key]
 	HsetMu.RUnlock()
 
 	if !ok {
-		return proto.RespMessage{Typ: "nil"}
+		return proto.RespMessage{Typ: "null"}
 	}
 
 	return proto.RespMessage{Typ: "string", String: val}
