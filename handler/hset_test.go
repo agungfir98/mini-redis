@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func testHset(t *testing.T, c SetTestCase) {
+func testHset(t *testing.T, c HashTestCase) {
 	cmd := strings.ToUpper(c.setArgs[0].String)
 	args := c.setArgs[1:]
 

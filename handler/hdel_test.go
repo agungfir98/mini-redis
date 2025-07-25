@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func testHDel(t *testing.T, c SetTestCase) {
+func testHDel(t *testing.T, c HashTestCase) {
 	cmd := strings.ToUpper(c.delArgs[0].String)
 
 	handler, ok := Message[cmd]

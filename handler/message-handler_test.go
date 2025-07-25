@@ -54,33 +54,62 @@ func testStringData(t *testing.T) {
 	}
 }
 
+type HashTestCase struct {
+	SetTestCase
+	hgetallArgs []proto.RespMessage
+	hgetallWant proto.RespMessage
+}
+
 func testHashData(t *testing.T) {
-	tc := []SetTestCase{
+	tc := []HashTestCase{
 		{
-			name: "Hash command",
-			setArgs: []proto.RespMessage{
-				{Typ: "string", String: "HSET"},
-				{Typ: "string", String: "user"},
-				{Typ: "string", String: "u1"},
-				{Typ: "string", String: "foo"},
-				{Typ: "string", String: "u2"},
-				{Typ: "string", String: "bar"},
+			SetTestCase: SetTestCase{
+				name: "Hash command",
+				setArgs: []proto.RespMessage{
+					{Typ: "string", String: "HSET"},
+					{Typ: "string", String: "user"},
+					{Typ: "string", String: "u1"},
+					{Typ: "string", String: "foo"},
+					{Typ: "string", String: "u2"},
+					{Typ: "string", String: "bar"},
+					{Typ: "string", String: "u3"},
+					{Typ: "string", String: "fizz"},
+					{Typ: "string", String: "u4"},
+					{Typ: "string", String: "buzz"},
+				},
+				getArgs: []proto.RespMessage{
+					{Typ: "string", String: "HGET"},
+					{Typ: "string", String: "user"},
+					{Typ: "string", String: "u1"},
+				},
+				delArgs: []proto.RespMessage{
+					{Typ: "string", String: "HDEL"},
+					{Typ: "string", String: "user"},
+					{Typ: "string", String: "u1"},
+					{Typ: "string", String: "u2"},
+					{Typ: "string", String: "u8"},
+				},
+				setWant: proto.RespMessage{Typ: "integer", Num: 4},
+				getWant: proto.RespMessage{Typ: "string", String: "foo"},
+				delWant: proto.RespMessage{Typ: "integer", Num: 2},
 			},
-			getArgs: []proto.RespMessage{
-				{Typ: "string", String: "HGET"},
+			hgetallArgs: []proto.RespMessage{
+				{Typ: "string", String: "HGETALL"},
 				{Typ: "string", String: "user"},
-				{Typ: "string", String: "u1"},
 			},
-			delArgs: []proto.RespMessage{
-				{Typ: "string", String: "HDEL"},
-				{Typ: "string", String: "user"},
-				{Typ: "string", String: "u1"},
-				{Typ: "string", String: "u2"},
-				{Typ: "string", String: "u8"},
+			hgetallWant: proto.RespMessage{
+				Typ: "array",
+				Array: []proto.RespMessage{
+					{Typ: "string", String: "u1"},
+					{Typ: "string", String: "foo"},
+					{Typ: "string", String: "u2"},
+					{Typ: "string", String: "bar"},
+					{Typ: "string", String: "u3"},
+					{Typ: "string", String: "fizz"},
+					{Typ: "string", String: "u4"},
+					{Typ: "string", String: "buzz"},
+				},
 			},
-			setWant: proto.RespMessage{Typ: "integer", Num: 2},
-			getWant: proto.RespMessage{Typ: "string", String: "foo"},
-			delWant: proto.RespMessage{Typ: "integer", Num: 2},
 		},
 	}
 
@@ -89,6 +118,7 @@ func testHashData(t *testing.T) {
 			var skip bool
 			runStep(t, "hset", &skip, func(t *testing.T) { testHset(t, c) })
 			runStep(t, "hget", &skip, func(t *testing.T) { testHget(t, c) })
+			runStep(t, "hget", &skip, func(t *testing.T) { testHgetAll(t, c) })
 			runStep(t, "hdel", &skip, func(t *testing.T) { testHDel(t, c) })
 		})
 	}
@@ -98,6 +128,7 @@ func runStep(t *testing.T, name string, skip *bool, fn func(t *testing.T)) {
 	t.Run(name, func(t *testing.T) {
 		if *skip {
 			t.Skipf("skipping %s because earlier step failed", name)
+			return
 		}
 
 		fn(t)

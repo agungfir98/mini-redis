@@ -8,13 +8,14 @@ import (
 )
 
 var Message = map[string]func([]proto.RespMessage) proto.RespMessage{
-	"PING": Ping,
-	"SET":  Set,
-	"GET":  Get,
-	"DEL":  Del,
-	"HSET": Hset,
-	"HGET": Hget,
-	"HDEL": Hdel,
+	"PING":    Ping,
+	"SET":     Set,
+	"GET":     Get,
+	"DEL":     Del,
+	"HSET":    Hset,
+	"HGET":    Hget,
+	"HDEL":    Hdel,
+	"HGETALL": HgetAll,
 }
 
 var SETs = map[string]string{}
