@@ -14,11 +14,14 @@ A minimal Redis clone written in Go — supports a subset of the Redis protocol 
 - [x] Basic commands:
 - [x] `PING` – Ping the server and will reply with PONG
 - [x] `SET key value` – Store a value by key
+- [ ] make SET accept expiration
 - [x] `GET key` – Retrieve a value by key
 - [x] `DEL key` – Delete a key
-- [ ] `KEYS pattern` – Pattern match key lookup
-- [ ] `HSET key field value` – Set hash field
-- [ ] `HGET key field` – Get hash field
+- [x] `KEYS` - Return all keys matching pattern
+- [x] `HSET key field value` – Set hash field
+- [x] `HGET key field` – Get hash field
+- [x] `HDEL key field` – Delete specified field from the hash
+- [x] `HGETALL key field` – Delete specified field from the hash
 
 ---
 

@@ -8,6 +8,7 @@ import (
 
 func TestMessageHandler(t *testing.T) {
 	testStringData(t) // get set del ....
+	testKeys(t)
 	testHashData(t) // hget hset hgetl ...
 }
 
