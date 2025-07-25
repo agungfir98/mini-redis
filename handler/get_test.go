@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func testGet(t *testing.T, c SetTestCase) {
+func testGet(t *testing.T, c StringTestCase) {
 	cmd := strings.ToUpper(c.getArgs[0].String)
 	handler, ok := Message[cmd]
 	if !ok {
