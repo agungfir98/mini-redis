@@ -17,6 +17,7 @@ A minimal Redis clone written in Go — supports a subset of the Redis protocol 
 - [ ] make SET accept expiration
 - [x] `GET key` – Retrieve a value by key
 - [x] `DEL key` – Delete a key
+- [x] `TTL` - Return remaining time to live of a key that has a timeout.
 - [x] `KEYS` - Return all keys matching pattern
 - [x] `HSET key field value` – Set hash field
 - [x] `HGET key field` – Get hash field

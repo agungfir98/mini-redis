@@ -18,5 +18,5 @@ func Get(args []proto.RespMessage) proto.RespMessage {
 		return proto.RespMessage{Typ: "null"}
 	}
 
-	return proto.RespMessage{Typ: "string", String: val}
+	return proto.RespMessage{Typ: "string", String: val.value}
 }
