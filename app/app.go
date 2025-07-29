@@ -122,8 +122,6 @@ func (c *Client) handleConnection() {
 		cmd := strings.ToUpper(msg.Array[0].String)
 		args := msg.Array[1:]
 
-		fmt.Println(args)
-
 		if msg.Typ != "array" {
 			msg := proto.RespMessage{Typ: "error", Error: "Type error, expected array"}
 			writer.Write(msg)

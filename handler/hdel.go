@@ -1,31 +1,17 @@
 package handler
 
-import "github.com/agungfir98/mini-redis/proto"
+import (
+	"github.com/agungfir98/mini-redis/proto"
+	"github.com/agungfir98/mini-redis/store"
+)
 
 func Hdel(args []proto.RespMessage) proto.RespMessage {
 	if len(args) < 2 {
 		return WrongArgNumber("hdel")
 	}
-
-	var n int
-
 	hash := args[0].String
-	_, ok := HSETs[hash]
-	if !ok {
-		return proto.RespMessage{Typ: "integer", Num: n}
-	}
 
-	HsetMu.Lock()
-	for _, key := range args[1:] {
-		_, ok := HSETs[hash][key.String]
-		if !ok {
-			continue
-		}
-		delete(HSETs[hash], key.String)
-		n += 1
-	}
-
-	HsetMu.Unlock()
+	n := store.HdellRaw(hash, args[1:])
 
 	return proto.RespMessage{Typ: "integer", Num: n}
 }

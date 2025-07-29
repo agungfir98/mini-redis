@@ -1,6 +1,9 @@
 package handler
 
-import "github.com/agungfir98/mini-redis/proto"
+import (
+	"github.com/agungfir98/mini-redis/proto"
+	"github.com/agungfir98/mini-redis/store"
+)
 
 func Hget(args []proto.RespMessage) proto.RespMessage {
 	if len(args) != 2 {
@@ -10,14 +13,7 @@ func Hget(args []proto.RespMessage) proto.RespMessage {
 	hash := args[0].String
 	key := args[1].String
 
-	HsetMu.RLock()
-	if _, ok := HSETs[hash]; !ok {
-		HsetMu.RUnlock()
-		return proto.RespMessage{Typ: "null"}
-	}
-	val, ok := HSETs[hash][key]
-	HsetMu.RUnlock()
-
+	val, ok := store.HygetRaw(hash, key)
 	if !ok {
 		return proto.RespMessage{Typ: "null"}
 	}

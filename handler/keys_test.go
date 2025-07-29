@@ -63,7 +63,6 @@ func testKeys(t *testing.T) {
 			cmd := c.args[0].String
 			handler := Message[cmd]
 
-			t.Logf("cmd: %v,\n args: %v\n", cmd, c.args)
 			got := handler(c.args[1:])
 
 			if !reflect.DeepEqual(got, c.want) {

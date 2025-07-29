@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/agungfir98/mini-redis/proto"
+	"github.com/agungfir98/mini-redis/store"
 )
 
 func Set(args []proto.RespMessage) proto.RespMessage {
@@ -18,20 +19,19 @@ func Set(args []proto.RespMessage) proto.RespMessage {
 		return proto.RespMessage{Typ: "error", Error: err.Error()}
 	}
 
-	SetMu.Lock()
-	defer SetMu.Unlock()
-	_, ok := SETs[key]
+	ttl := time.Time{}
+	_, ok := store.SETs[key]
 	if ok && opts.NX {
 		return proto.RespMessage{Typ: "null"}
 	}
 	if !ok && opts.XX {
 		return proto.RespMessage{Typ: "null"}
 	}
-	data := Sets{value: value}
 	if opts.EX || opts.PX {
-		data.expireAt = time.Now().Add(opts.ttl)
+		expireAt := time.Now().Add(opts.ttl)
+		ttl = expireAt
 	}
-	SETs[key] = data
 
+	store.SetRaw(key, value, ttl)
 	return proto.RespMessage{Typ: "status", Status: "OK"}
 }

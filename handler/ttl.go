@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/agungfir98/mini-redis/proto"
+	"github.com/agungfir98/mini-redis/store"
 )
 
 func TTL(args []proto.RespMessage) proto.RespMessage {
@@ -12,20 +13,16 @@ func TTL(args []proto.RespMessage) proto.RespMessage {
 	}
 	key := args[0].String
 
-	SetMu.RLock()
-	defer SetMu.RUnlock()
-
-	value, ok := SETs[key]
+	value, ok := store.GetRaw(key)
 	if !ok {
 		return proto.RespMessage{Typ: "integer", Num: -2}
 	}
-
-	if value.expireAt.IsZero() {
+	if value.ExpireAt.IsZero() {
 		return proto.RespMessage{Typ: "integer", Num: -1}
 	}
 
 	now := time.Now()
-	TTL := max(value.expireAt.Sub(now), 0)
+	TTL := max(value.ExpireAt.Sub(now), 0)
 	return proto.RespMessage{Typ: "integer", Num: int(TTL.Seconds())}
 
 }
