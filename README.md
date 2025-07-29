@@ -8,21 +8,39 @@ A minimal Redis clone written in Go — supports a subset of the Redis protocol 
 
 ---
 
+### Architecture diagram
+
+```
++--------+          +-------------+              +------------------+
+| client | -------> | TCP Request | -----------> | Resp Deserialize |
++--------+          +-------------+              +------------------+
+    ^                                                      |
+    |                                                      |
+    |                                                      
++----------+          +----------------+          +-----------------+
+| Response | <------- | Resp serialize | <------- | Command Handler |
++----------+          +----------------+          +-----------------+
+```
+
+---
+
 ## Features
 
 - [x] RESP protocol parsing
 - [x] Basic commands:
 - [x] `PING` – Ping the server and will reply with PONG
 - [x] `SET key value` – Store a value by key
-- [ ] make SET accept expiration
 - [x] `GET key` – Retrieve a value by key
 - [x] `DEL key` – Delete a key
+- [ ] `EXPIRE` - Set timeout on a key
 - [x] `TTL` - Return remaining time to live of a key that has a timeout.
 - [x] `KEYS` - Return all keys matching pattern
 - [x] `HSET key field value` – Set hash field
 - [x] `HGET key field` – Get hash field
 - [x] `HDEL key field` – Delete specified field from the hash
 - [x] `HGETALL key field` – Delete specified field from the hash
+- [x] expiration cleanup 
+- [ ] disk storage for persistent across restart
 
 ---
 
@@ -69,5 +87,5 @@ OK
 - parses raw Resp manually
 - handle each connection with go routines
 - uses map[string]string internally for storage
-
+- Uses min heap data structure to hold data with timeout
 
