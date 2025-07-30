@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"time"
-
 	"github.com/agungfir98/mini-redis/proto"
 	"github.com/agungfir98/mini-redis/store"
 )
@@ -19,7 +17,6 @@ func Set(args []proto.RespMessage) proto.RespMessage {
 		return proto.RespMessage{Typ: "error", Error: err.Error()}
 	}
 
-	ttl := time.Time{}
 	_, ok := store.SETs[key]
 	if ok && opts.NX {
 		return proto.RespMessage{Typ: "null"}
@@ -27,11 +24,7 @@ func Set(args []proto.RespMessage) proto.RespMessage {
 	if !ok && opts.XX {
 		return proto.RespMessage{Typ: "null"}
 	}
-	if opts.EX || opts.PX {
-		expireAt := time.Now().Add(opts.ttl)
-		ttl = expireAt
-	}
 
-	store.SetRaw(key, value, ttl)
+	store.SetRaw(key, value, opts.ttl)
 	return proto.RespMessage{Typ: "status", Status: "OK"}
 }

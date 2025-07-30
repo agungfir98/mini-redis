@@ -27,11 +27,13 @@ func WrongArgNumber(cmd string) proto.RespMessage {
 }
 
 type SetOptions struct {
-	ttl time.Duration
-	EX  bool // second
-	PX  bool // millisecond
-	NX  bool // only set if not exists
-	XX  bool // only set if key exists
+	ttl  time.Time
+	EX   bool // second
+	PX   bool // millisecond
+	EXAT bool // timestamp second
+	PXAT bool // timestamp millisecond
+	NX   bool // only set if not exists
+	XX   bool // only set if key exists
 }
 
 func parseOptions(args []proto.RespMessage) (opts SetOptions, err error) {
@@ -40,7 +42,7 @@ func parseOptions(args []proto.RespMessage) (opts SetOptions, err error) {
 	for i < len(args) {
 		opt := strings.ToUpper(args[i].String)
 		switch opt {
-		case "EX", "PX":
+		case "EX", "PX", "EXAT", "PXAT":
 			if i+1 >= len(args) {
 				return opts, fmt.Errorf("ERR missing expire time")
 			}
@@ -50,15 +52,23 @@ func parseOptions(args []proto.RespMessage) (opts SetOptions, err error) {
 				return opts, fmt.Errorf("invalid expire time")
 			}
 
-			var duration time.Duration
-			if opt == "EX" {
+			var ttl time.Time
+			now := time.Now()
+			switch opt {
+			case "EX":
 				opts.EX = true
-				duration = time.Duration(num * int(time.Second))
-			} else {
+				ttl = now.Add(time.Duration(num) * time.Second)
+			case "PX":
 				opts.PX = true
-				duration = time.Duration(num * int(time.Millisecond))
+				ttl = now.Add(time.Duration(num) * time.Millisecond)
+			case "EXAT":
+				opts.EXAT = true
+				ttl = time.Unix(int64(num), 0)
+			case "PXAT":
+				opts.PXAT = true
+				ttl = time.UnixMilli(int64(num))
 			}
-			opts.ttl = duration
+			opts.ttl = ttl
 			i += 2
 			return opts, nil
 		case "NX":
